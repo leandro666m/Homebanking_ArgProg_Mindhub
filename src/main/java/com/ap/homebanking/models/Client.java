@@ -1,4 +1,4 @@
 package com.ap.homebanking.models;
 
-public class Cliente {
+public class Client {
 }
