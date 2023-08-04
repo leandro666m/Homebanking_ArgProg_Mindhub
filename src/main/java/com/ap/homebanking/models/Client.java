@@ -10,8 +10,8 @@ import javax.persistence.Id;
 @Entity
 public class Client {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-    @GenericGenerator(name = "native", strategy = "native")
+    //@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    //@GenericGenerator(name = "native", strategy = "native")
     private long id;
     private String firstName;
     private String lastName;
@@ -19,9 +19,10 @@ public class Client {
 
     public Client() { }
 
-    public Client(String first, String last) {
+    public Client(String first, String last, String email) {
         this.firstName = first;
         this.lastName = last;
+        this.email =email;
     }
 
     public String getFirstName() {
