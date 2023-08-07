@@ -2,23 +2,21 @@ package com.ap.homebanking.models;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Client {
     @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-    //@GenericGenerator(name = "native", strategy = "native")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native", strategy = "native")
     private long id;
     private String firstName;
     private String lastName;
     private String email;
 
-    public Client() { }
-
+   public Client() { }
     public Client(String first, String last, String email) {
         this.firstName = first;
         this.lastName = last;
@@ -28,7 +26,6 @@ public class Client {
     public String getFirstName() {
         return firstName;
     }
-
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -36,7 +33,6 @@ public class Client {
     public String getLastName() {
         return lastName;
     }
-
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
@@ -44,12 +40,22 @@ public class Client {
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public String toString() {
-        return firstName + " " + lastName;
+
+
+    /*----------------------------------------------------------------*/
+    @OneToMany (mappedBy = "client_id", fetch = FetchType.EAGER)
+    Set<Account> accounts = new HashSet<>();
+
+    public Set<Account> getAccounts() {
+        return accounts;
     }
+    public void addAccount( Account account) {
+        account.setClient(this);
+        accounts.add( account );
+    }
+
 }
