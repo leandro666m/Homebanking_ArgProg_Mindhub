@@ -1,8 +1,6 @@
 package com.ap.homebanking.dto;
 
-import com.ap.homebanking.models.Account;
 import com.ap.homebanking.models.Client;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,6 +36,4 @@ Set<AccountDTO> accounts = new HashSet<>();
     public String getEmail() {
         return email;
     }
-
-
 }
