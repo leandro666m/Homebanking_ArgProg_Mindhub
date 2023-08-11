@@ -29,57 +29,39 @@ public class HomebankingApplication {
 			TransactionRepository transactionRepository) {
 		return (args) -> {
 //----------CLIENTES
-			Client client1 =new Client( );
-				client1.setFirstName("Melba");
-				client1.setLastName("Morel");
-				client1.setEmail("melba@mindhub.com");
-
-            Client client2 = new Client( );
-				client2.setFirstName("Jack");
-				client2.setLastName("Sparrow");
-				client2.setEmail("jacksparr@mindhub.com");
+			Client client1 =new Client( "Melba", "Morel","melba@mindhub.com" );
 			clientRepository.save( client1 );
+
+            Client client2 = new Client( "Jack","Sparrow","jacksparr@mindhub.com");
 			clientRepository.save( client2 );
 //----------CUENTAS
-            LocalDate today = LocalDate.now();
-            Account account1 = new Account();
-				account1.setNumber("VIN001" );
-				account1.setCreationDate( today );
-				account1.setBalance( 5000 );
+            Account account1 = new Account("VIN001", LocalDate.now(), 5000 );
+			Account account2 = new Account("VIN002", LocalDate.now().plusDays(1), 7500 );
+			Account account3 = new Account("VIN003", LocalDate.now(), 15000 );
 
-            Account account2 = new Account( );
-				account2.setNumber("VIN002" );
-				account2.setCreationDate( today.plusDays(1) );
-				account2.setBalance( 7500 );
+			client1.addAccount( account1);
+			client1.addAccount( account2 );
+				client2.addAccount( account3 );
 
-			Account account3 = new Account( );
-			account3.setNumber("VIN003" );
-			account3.setCreationDate( today.plusDays(1) );
-			account3.setBalance( 17500 );
-
-		client1.addAccount( account1);
-		client1.addAccount( account2 );
-			client2.addAccount( account3 );
-
-			accountRepository.save( account1);
-			accountRepository.save( account2);
-			accountRepository.save( account3);
-
+			accountRepository.save( account1 );
+			accountRepository.save( account2 );
+			accountRepository.save( account3 );
 
 //----------TRANSACCIONES
-			Transaction trans1 = new Transaction( TransactionType.DEBITO, LocalDateTime.now(), -2300, "Debito automatico");
+		//a cuenta 1
+			Transaction trans1 = new Transaction( TransactionType.DEBIT, LocalDateTime.now(), -2300, "Debito automatico");
 			account1.addTransaction( trans1 );
 			transactionRepository.save( trans1 );
 
-			Transaction trans2 = new Transaction( TransactionType.CREDITO, LocalDateTime.now(), 300, "Deposito");
+			Transaction trans2 = new Transaction( TransactionType.CREDIT, LocalDateTime.now(), 300, "Deposito");
 			account1.addTransaction( trans2 );
-			transactionRepository.save( trans1 );
-
-			Transaction trans3 = new Transaction( TransactionType.DEBITO, LocalDateTime.now(), -300, "Debito automatico");
+			transactionRepository.save( trans2 );
+		// a cuenta 2
+			Transaction trans3 = new Transaction( TransactionType.DEBIT, LocalDateTime.now(), -300, "Debito automatico");
 			account2.addTransaction( trans3 );
 			transactionRepository.save( trans3 );
-
-			Transaction trans4 = new Transaction( TransactionType.CREDITO, LocalDateTime.now(), 8300, "Pago");
+		// a cuenta 3
+			Transaction trans4 = new Transaction( TransactionType.CREDIT, LocalDateTime.now(), 8300, "Pago");
 			account3.addTransaction( trans4 );
 			transactionRepository.save( trans4 );
 
