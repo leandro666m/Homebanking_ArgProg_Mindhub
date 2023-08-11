@@ -1,5 +1,4 @@
 package com.ap.homebanking.dto;
-
 import com.ap.homebanking.models.Transaction;
 import com.ap.homebanking.models.TransactionType;
 import java.time.LocalDateTime;
