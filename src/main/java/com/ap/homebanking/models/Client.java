@@ -1,8 +1,5 @@
 package com.ap.homebanking.models;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.List;
@@ -19,19 +16,15 @@ public class Client {
     private String lastName;
     private String email;
 
-    /*-------Relacion 1-N con Account-------------------------------------------------*/
-    @OneToMany (mappedBy = "client", fetch = FetchType.EAGER)
-    private Set<Account> accounts = new HashSet<>();
-    /*-------Relacion 1-N con Loan-------------------------------------------------*/
-    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
-    private Set<ClientLoan> loans = new HashSet<>();
-
+    //constructores
         public Client() { }
         public Client(String first, String last, String email) {
         this.firstName = first;
         this.lastName = last;
         this.email =email;
     }
+
+    //metodos propios
     public long getId() {
         return id;
     }
@@ -55,24 +48,49 @@ public class Client {
     }
 
 // Accounts
+/*-------Relacion 1-N con Account-------------------------------------------------*/
+@OneToMany (mappedBy = "client", fetch = FetchType.EAGER)
+private Set<Account> accounts = new HashSet<>();
+
+    public void addAccount( Account account) {
+    account.setClient(this);
+    accounts.add( account );
+}
+
     public Set<Account> getAccounts() {
         return accounts;
     }
-    public void addAccount( Account account) {
-        account.setClient(this);
-        accounts.add( account );
-    }
+
 //Loans
+/*-------Relacion 1-N con Loan-------------------------------------------------*/
+@OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
+private Set<ClientLoan> loans = new HashSet<>();
+
+    public void addClientLoans(ClientLoan clientLoan){
+    clientLoan.setClient(this);
+    loans.add(clientLoan);
+}
+
     public Set<ClientLoan> getClientLoans(){
         return loans;
-    }
-    public void addClientLoans(ClientLoan clientLoan){
-        clientLoan.setClient(this);
-        loans.add(clientLoan);
     }
 
     //@JsonIgnore
     public List<Loan> getLoans(){
         return loans.stream().map(ClientLoan::getLoan).collect(Collectors.toList());
     }
+
+// Cards
+/*-------Relacion 1-N con Card-------------------------------------------------*/
+@OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
+private Set<Card> cards = new HashSet<>();
+
+    public void addCard(Card card) {
+        card.setClient(this);
+        cards.add(card);
+    }
+
+    public Set<Card> getCards() {
+    return cards;
+}
 }

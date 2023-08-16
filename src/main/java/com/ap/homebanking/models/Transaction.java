@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 
 @Entity
 public class Transaction {
-
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name="native", strategy = "native")
@@ -15,22 +14,19 @@ public class Transaction {
     private double amount;
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="account_id")
-    private Account account;
-
+// constructores
         public Transaction( TransactionType type, LocalDateTime date, double amount, String description) {
         this.type = type;
         this.date = date;
         this.amount = amount;
         this.description = description;
     }
-        public Transaction() {
-    }
+        public Transaction() {    }
+
+// metodos propios
     public long getId() {
         return id;
     }
-
     public TransactionType getType() {
         return type;
     }
@@ -56,7 +52,12 @@ public class Transaction {
         this.description = description;
     }
 
-    /*----------------------------------------------------------------------------*/
+// Account
+/*-------Relacion N-1 con Account-------------------------------------------------*/
+@ManyToOne(fetch = FetchType.EAGER)
+@JoinColumn(name="account_id")
+private Account account;
+
     //@JsonIgnore
     public Account getAccount() {
         return account;
