@@ -7,7 +7,6 @@ import java.util.Set;
 
 @Entity
 public class Account {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
@@ -16,21 +15,15 @@ public class Account {
     private LocalDate creationDate;
     private double balance;
 
-    /*----------------Relaciones----------------------------------------*/
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="client_id")
-    private Client client;
-
-    @OneToMany (mappedBy = "account", fetch = FetchType.EAGER)
-    private Set<Transaction> transactions = new HashSet<>();
-
+//constructores
         public Account(String number, LocalDate creationDate, double balance) {
             this.number = number;
             this.creationDate = creationDate;
             this.balance = balance;
         }
-        public Account() {
-        }
+        public Account() {        }
+
+//metodos propios
     public long getId() {
         return id;
     }
@@ -53,20 +46,29 @@ public class Account {
         this.balance = balance;
     }
 
-    /*----------------------------------------------------------------------------*/
+// Client
+/*-------Relacion N-1 con Client-------------------------------------------------*/
+@ManyToOne(fetch = FetchType.EAGER)
+@JoinColumn(name="client_id")
+private Client client;
+
     //@JsonIgnore
     public Client getClient() {
         return client;
     }
+
     public void setClient(Client client) {
         this.client = client;
     }
 
-
+/*-------Relacion 1-N con Transaction-------------------------------------------------*/
+@OneToMany (mappedBy = "account", fetch = FetchType.EAGER)
+private Set<Transaction> transactions = new HashSet<>();
 
     public Set<Transaction> getTransactions() {
         return transactions;
     }
+
     public void addTransaction( Transaction transaction) {
         transaction.setAccount(this);
         transactions.add( transaction );

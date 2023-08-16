@@ -19,7 +19,8 @@ public class HomebankingApplication {
 	@Bean
 	public CommandLineRunner initData(
 			ClientRepository clientRepository, AccountRepository accountRepository,
-			TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository) {
+			TransactionRepository transactionRepository, LoanRepository loanRepository,
+			ClientLoanRepository clientLoanRepository, CardRepository cardRepository ) {
 		return (args) -> {
 //----------CLIENTES
 			Client client1 =new Client( "Melba", "Morel","melba@mindhub.com" );
@@ -93,6 +94,44 @@ public class HomebankingApplication {
             loan3.addClientLoans( clientLoan4 );
             clientLoanRepository.save( clientLoan4 );
 
+//---CARDS
+		/*
+		Una tarjeta de débito GOLD para el cliente Melba, la fecha de inicio de validez es la fecha actual y la fecha de vencimiento 5 años desde la fecha actual, cardholder tendrá el nombre y apellido del cliente concatenado, los demás campos los puedes completar a tu elección, recuerda que el cvv tiene solo 3 dígitos.
+		Una tarjeta de crédito Titanium para el cliente Melba con los mismos datos excepto número y cvv.
+		Crea una tarjeta de crédito silver para el segundo cliente.
+		*/
+			//-- card1
+			Card card1 = new Card( );
+			card1.setCardHolder(client1.getFirstName()+" "+client1.getLastName());
+			card1.setType(CardType.DEBIT);
+			card1.setColor(CardColor.GOLD);
+			card1.setNumber("1234 4567 9876 6543");
+			card1.setCvv((short) 003);
+			card1.setFromDate(LocalDate.now() );
+			card1.setThruDate(LocalDate.now().plusYears(5) );
+				// a client1 Melba
+				client1.addCard(card1);
+				cardRepository.save(card1);
+
+			//-- card2
+			Card card2 = new Card();
+			card2.setCardHolder(client1.getFirstName()+" "+client1.getLastName());
+			card2.setType(CardType.CREDIT);
+			card2.setColor(CardColor.TITANIUM);
+			card2.setNumber("6543 1234 9876 8888");
+			card2.setCvv((short) 654);
+			card2.setFromDate(LocalDate.now() );
+			card2.setThruDate(LocalDate.now().plusYears(5) );
+				// a client1 Melba
+				client1.addCard(card2);
+				cardRepository.save(card2);
+
+			//-- card3
+			Card card3 = new Card( client2.getFirstName()+" "+client2.getLastName(), CardType.CREDIT, CardColor.SILVER,
+					"0011 7777 6666 3215", (short)987, LocalDate.now() , LocalDate.now().plusYears(5) );
+				// a client2
+				client2.addCard(card3);
+				cardRepository.save(card3);
 		};
 	}
 
