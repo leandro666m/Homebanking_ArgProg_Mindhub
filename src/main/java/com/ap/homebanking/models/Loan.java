@@ -57,13 +57,13 @@ public class Loan {
 @OneToMany(mappedBy = "loan", fetch = FetchType.EAGER)
 private Set<ClientLoan> clients = new HashSet<>();
 
-    public Set<ClientLoan> getClientLoans() {
-        return clients;
-    }
-
     public void addClientLoans(ClientLoan clientLoan){
         clientLoan.setLoan(this);
         clients.add(clientLoan);
+    }
+
+    public Set<ClientLoan> getClientLoans() {
+        return clients;
     }
 
     //@JsonIgnore

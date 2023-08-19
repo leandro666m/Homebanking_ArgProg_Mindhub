@@ -1,10 +1,13 @@
 package com.ap.homebanking;
 import com.ap.homebanking.models.*;
 import com.ap.homebanking.repositories.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,22 +15,27 @@ import java.util.List;
 @SpringBootApplication
 public class HomebankingApplication {
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	public static void main(String[] args) {
 		SpringApplication.run(HomebankingApplication.class, args);
 	}
 
 	@Bean
-	public CommandLineRunner initData(
-			ClientRepository clientRepository, AccountRepository accountRepository,
+	public CommandLineRunner initData( ClientRepository clientRepository, AccountRepository accountRepository,
 			TransactionRepository transactionRepository, LoanRepository loanRepository,
 			ClientLoanRepository clientLoanRepository, CardRepository cardRepository ) {
 		return (args) -> {
 //----------CLIENTES
-			Client client1 =new Client( "Melba", "Morel","melba@mindhub.com" );
-            Client client2 = new Client( "Jack","Sparrow","jacksparr@mindhub.com");
+			Client client1 =new Client( "Melba", "Morel","melba@mindhub.com", passwordEncoder.encode("pass1234") );
+            Client client2 = new Client( "Jack","Sparrow","jacksparr@mindhub.com", passwordEncoder.encode("pass1234") );
+
+			Client clientAdmin = new Client( "admin","admin","admin@mindhub.com", passwordEncoder.encode("admin1234") );
 
             clientRepository.save( client1 );
 			clientRepository.save( client2 );
+			clientRepository.save( clientAdmin );
 //----------CUENTAS
             Account account1 = new Account("VIN001", LocalDate.now(), 5000 );
 			Account account2 = new Account("VIN002", LocalDate.now().plusDays(1), 7500 );
