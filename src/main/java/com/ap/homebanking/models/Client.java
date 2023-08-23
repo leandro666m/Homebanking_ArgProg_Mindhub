@@ -15,13 +15,25 @@ public class Client {
     private String firstName;
     private String lastName;
     private String email;
+private String password;
+
+    /*-------Relacion 1-N con Account-------------------------------------------------*/
+    @OneToMany (mappedBy = "client", fetch = FetchType.EAGER)
+    private Set<Account> accounts = new HashSet<>();
+    /*-------Relacion 1-N con Loan-------------------------------------------------*/
+    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
+    private Set<ClientLoan> loans = new HashSet<>();
+    /*-------Relacion 1-N con Card-------------------------------------------------*/
+    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
+    private Set<Card> cards = new HashSet<>();
 
     //constructores
         public Client() { }
-        public Client(String first, String last, String email) {
+        public Client(String first, String last, String email, String password) {
         this.firstName = first;
         this.lastName = last;
         this.email =email;
+        this.password =password;
     }
 
     //metodos propios
@@ -46,12 +58,14 @@ public class Client {
     public void setEmail(String email) {
         this.email = email;
     }
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
 // Accounts
-/*-------Relacion 1-N con Account-------------------------------------------------*/
-@OneToMany (mappedBy = "client", fetch = FetchType.EAGER)
-private Set<Account> accounts = new HashSet<>();
-
     public void addAccount( Account account) {
     account.setClient(this);
     accounts.add( account );
@@ -62,10 +76,6 @@ private Set<Account> accounts = new HashSet<>();
     }
 
 //Loans
-/*-------Relacion 1-N con Loan-------------------------------------------------*/
-@OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
-private Set<ClientLoan> loans = new HashSet<>();
-
     public void addClientLoans(ClientLoan clientLoan){
     clientLoan.setClient(this);
     loans.add(clientLoan);
@@ -81,10 +91,6 @@ private Set<ClientLoan> loans = new HashSet<>();
     }
 
 // Cards
-/*-------Relacion 1-N con Card-------------------------------------------------*/
-@OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
-private Set<Card> cards = new HashSet<>();
-
     public void addCard(Card card) {
         card.setClient(this);
         cards.add(card);
