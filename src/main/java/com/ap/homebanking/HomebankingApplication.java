@@ -80,24 +80,24 @@ public class HomebankingApplication {
         // para el cliente 1 -Melba
             /*  Préstamo Hipotecario, 400.000, 60 cuotas.
                 Préstamo Personal, 50.000, 12 cuotas */
-            ClientLoan clientLoan1 = new ClientLoan(400000.0, 60, client1, loan1);
+            ClientLoan clientLoan1 = new ClientLoan(400000.0, 60);
         client1.addClientLoans( clientLoan1 ); // asigno el Prestamo1 al cliente1
             loan1.addClientLoans( clientLoan1 ); //viceversa: al prestamo1 le asigno el cliente1
             clientLoanRepository.save( clientLoan1 ); // se guarda
 
-            ClientLoan clientLoan2 = new ClientLoan(50000.0, 12, client1, loan2);
+            ClientLoan clientLoan2 = new ClientLoan(50000.0, 12);
         client1.addClientLoans( clientLoan2 );
             loan2.addClientLoans( clientLoan2 );
             clientLoanRepository.save( clientLoan2 );
         // para el cliente 2
             /*  Préstamo Personal, 100.000, 24 cuotas
                 Préstamo Automotriz, 200.000, 36 cuotas */
-            ClientLoan clientLoan3 = new ClientLoan(100000.0, 24, client2, loan2);
+            ClientLoan clientLoan3 = new ClientLoan(100000.0, 24);
         client2.addClientLoans( clientLoan3 );
             loan2.addClientLoans( clientLoan3 );
             clientLoanRepository.save( clientLoan3 );
 
-            ClientLoan clientLoan4 = new ClientLoan(200000.0, 36, client2, loan3);
+            ClientLoan clientLoan4 = new ClientLoan(200000.0, 36);
         client2.addClientLoans( clientLoan4 );
             loan3.addClientLoans( clientLoan4 );
             clientLoanRepository.save( clientLoan4 );
