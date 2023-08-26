@@ -1,6 +1,8 @@
 package com.ap.homebanking.controllers;
 import com.ap.homebanking.dto.ClientDTO;
+import com.ap.homebanking.models.Account;
 import com.ap.homebanking.models.Client;
+import com.ap.homebanking.repositories.AccountRepository;
 import com.ap.homebanking.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @RequestMapping( "/api")
@@ -20,6 +24,8 @@ public class ClientController {
     private ClientRepository clientRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AccountRepository accountRepository;
 
     @RequestMapping( "/clients")
     public List<ClientDTO> getClients(){
@@ -41,7 +47,15 @@ public class ClientController {
         if (clientRepository.findByEmail(email) !=  null) {
             return new ResponseEntity<>("Ese email ya esta en uso ", HttpStatus.FORBIDDEN);
         }
-        clientRepository.save( new Client(firstName, lastName, email, passwordEncoder.encode(password)));
+
+        Client newClientRegistered = new Client(firstName, lastName, email, passwordEncoder.encode(password));
+        clientRepository.save(newClientRegistered);
+
+        int accountNumber = new Random( ).nextInt( 99999999 - 1)+1;
+        Account newAccountForNewClient = new Account( "VIN-"+accountNumber, LocalDate.now(), 0  );
+        newClientRegistered.addAccount( newAccountForNewClient );
+        accountRepository.save( newAccountForNewClient );
+
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
