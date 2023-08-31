@@ -16,15 +16,14 @@ import javax.servlet.http.HttpSession;
 @EnableWebSecurity
 @Configuration
 class WebAuthorization {
-
     @Bean
     protected SecurityFilterChain filterChain( HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/manager.html", "/rest/**").hasAuthority("ADMIN")
-                .antMatchers("/h2-console").hasAuthority("ADMIN")
-
                 .antMatchers("/web/**").permitAll()
                 .antMatchers( HttpMethod.POST, "/api/login", "/api/logout", "/api/clients").permitAll()
+
+                .antMatchers("/manager.html", "/rest/**").hasAuthority("ADMIN")
+                .antMatchers("/h2-console").hasAuthority("ADMIN")
 
                 .antMatchers("/**").hasAuthority("CLIENT");
 
@@ -32,21 +31,14 @@ class WebAuthorization {
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .loginPage("/api/login");
-
-        http.logout().logoutUrl("/api/logout");
+       http.logout().logoutUrl("/api/logout");
 
         http.csrf().disable();// deshabilita chequeo por tokens CSRF
-
         http.headers().frameOptions().disable(); //deshabilita frameOptions para poder acceder a h2-console
-
         http.exceptionHandling().authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));// Si el usr no está autenticado
-
         http.formLogin().successHandler( (req, res, auth) -> clearAuthenticationAttributes(req) ); // Si se leggea, limpiar las banderas para que no vuelva a pedir por la autenticacion al navegar
-
         http.formLogin().failureHandler((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED)); //Si login falla o no esta autorizado para navegar a cierto lugar
-
         http.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler()); // al desloggearse responder con http estado de que salio bién
-
     return http.build();
     }
 
@@ -56,6 +48,5 @@ class WebAuthorization {
             session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
         }
     }
-
 
 }
