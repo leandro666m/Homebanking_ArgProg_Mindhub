@@ -19,6 +19,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toSet;
+
 @RequestMapping( value = "/api")
 @RestController
 public class AccountController {
@@ -46,19 +48,24 @@ public class AccountController {
             Set<AccountDTO> accounts= clientDto.getAccounts();
 
         if( (long) accounts.size() >= 3 ) {
-            System.out.println("ya tiene 3 cuentas");
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Ya tiene 3 cuentas.",HttpStatus.FORBIDDEN);
         }else {
-            System.out.println("Tiene menos de 3 cuentas. Creando");
+            int random = new Random( ).nextInt( 99999999 - 1)+1;
+            String  accountNumber;
+            do{
+                accountNumber = "VIN"+random;
+            } while (accountRepository.existsByNumber( accountNumber ));
 
-            int accountNumber = new Random( ).nextInt( 99999999 - 1)+1;
-
-            Account accountNew = new Account( "VIN-"+accountNumber, LocalDate.now(), 0  );
-            clientLogged.addAccount( accountNew );
-            accountRepository.save( accountNew );
-
-            return new ResponseEntity<>(HttpStatus.CREATED);
+                Account accountNew = new Account( "VIN-"+accountNumber, LocalDate.now(), 0  );
+                clientLogged.addAccount( accountNew );
+                accountRepository.save( accountNew );
+            return new ResponseEntity<>("Cuenta creada.",HttpStatus.CREATED);
         }
     }
 
+    @GetMapping("/clients/current/accounts")
+    public Set<AccountDTO> getClientCurrentAccounts(Authentication authentication){
+        Client clientLogged = clientRepository.findByEmail(authentication.getName());
+        return clientLogged.getAccounts().stream().map(account -> new AccountDTO(account)).collect(toSet());
+    }
 }

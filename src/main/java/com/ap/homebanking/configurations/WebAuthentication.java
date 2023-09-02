@@ -15,16 +15,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class WebAuthentication extends GlobalAuthenticationConfigurerAdapter {
-
+    private ClientRepository clientRepository;
     @Autowired
-    ClientRepository clientRepository;
+    public void setClientRepository( ClientRepository clientRepository){
+        this.clientRepository = clientRepository;
+    }
 
     @Override
     public void init(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService( inputName-> {
             Client client = clientRepository.findByEmail( inputName );
-
             if (client != null) {
+                if( client.getEmail().toLowerCase().contains("@admin") ){
+                    return new  User( client.getEmail(), client.getPassword(), AuthorityUtils.createAuthorityList("ADMIN") );
+                }
                 return new User( client.getEmail(), client.getPassword(), AuthorityUtils.createAuthorityList("CLIENT") );
             } else {
                 throw new UsernameNotFoundException( "El cliente " + inputName+ "no existe. " );
@@ -38,3 +42,4 @@ public class WebAuthentication extends GlobalAuthenticationConfigurerAdapter {
     }
 
 }
+
