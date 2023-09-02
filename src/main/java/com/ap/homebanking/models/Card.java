@@ -18,6 +18,11 @@ public class Card {
     private LocalDate fromDate;
     private LocalDate thruDate;
 
+    //---Relacion N-1 con Client-------------------------------------------------*/
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "client_id")
+    private Client client;
+
     //constructores
         public Card() {
     }
@@ -79,11 +84,6 @@ public class Card {
     }
 
 // Client
-    //---Relacion N-1 con Client-------------------------------------------------*/
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "client_id")
-    private Client client;
-
     public Client getClient() {
         return client;
     }

@@ -2,6 +2,7 @@ package com.ap.homebanking.controllers;
 import com.ap.homebanking.dto.CardDTO;
 import com.ap.homebanking.dto.ClientDTO;
 import com.ap.homebanking.models.*;
+import com.ap.homebanking.repositories.AccountRepository;
 import com.ap.homebanking.repositories.CardRepository;
 import com.ap.homebanking.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.util.Set;
 
 import static com.ap.homebanking.models.CardColor.*;
 import static com.ap.homebanking.models.CardType.*;
+import static com.ap.homebanking.utils.CardUtil.*;
 
 @RequestMapping( "/api")
 @RestController
@@ -28,9 +30,12 @@ public class CardController {
     private ClientRepository clientRepository;
     @Autowired
     private CardRepository cardRepository;
+    @Autowired
+    private AccountRepository accountRepository;
 
     @RequestMapping(path = "/clients/current/cards", method = RequestMethod.POST)
     public ResponseEntity<Object> createCard(Authentication authentication, @RequestParam CardType cardType,@RequestParam CardColor cardColor) {
+
         Client clientLogged = clientRepository.findByEmail(authentication.getName());
         ClientDTO clientDto = new ClientDTO( clientLogged );
 
@@ -48,36 +53,31 @@ public class CardController {
                             }
                             if (cardColor == card.getColor()) {
                                 if (card.getColor().equals(SILVER)) {
-                                    System.out.println("Ya tiene tarjeta SILVER");
-                                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                                    return new ResponseEntity<>("Ya tiene tarjeta SILVER",HttpStatus.FORBIDDEN);
                                 } else if (card.getColor().equals(GOLD)) {
-                                    System.out.println("Ya tiene tarjeta GOLD");
-                                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                                    return new ResponseEntity<>("Ya tiene tarjeta GOLD",HttpStatus.FORBIDDEN);
                                 } else {
-                                    System.out.println("Ya tiene tarjeta TITANIUM");
-                                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                                    return new ResponseEntity<>("Ya tiene tarjeta TITANIUM",HttpStatus.FORBIDDEN);
                                 }
                             }
                         }
                     }
-                    System.out.println("Tiene "+foundDebit+" tarjetas de Debito ");
-
                 if(foundDebit>=3){
-                    System.out.println("Ya tiene 3 tarjetas de Débito");
-                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                    return new ResponseEntity<>("Ya tiene 3 tarjetas de Débito",HttpStatus.FORBIDDEN);
                 } else if (foundCredit>=3) {
-                    System.out.println("Ya tiene 3 tarjetas de Crédito");
-                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                    return new ResponseEntity<>("Ya tiene 3 tarjetas de Crédito",HttpStatus.FORBIDDEN);
                 }
 
-
-
+        String numCard ="";
+                do{
+                    numCard = CardNumberGenerator();
+                }while( accountRepository.existsByNumber( numCard ) );
         // No tiene tarjeta del color pedido, se la puede Crear:
             Card newCard = new Card( );
             newCard.setCardHolder( clientLogged.getFirstName()+" "+clientLogged.getLastName());
             newCard.setType( cardType );
             newCard.setColor( cardColor );
-            newCard.setNumber( new Random().nextInt(9999-1)+1+"-" + new Random().nextInt(9999-1)+1+"-"+ new Random().nextInt(9999-1)+1+"-"+ new Random().nextInt(9999-1)+1 );
+            newCard.setNumber( numCard );
             newCard.setCvv((short) (new Random().nextInt(999-1)+1 ) );
             newCard.setFromDate(LocalDate.now() );
             newCard.setThruDate(LocalDate.now().plusYears(5) );
@@ -85,7 +85,7 @@ public class CardController {
             clientLogged.addCard( newCard );
             cardRepository.save( newCard );
 
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ResponseEntity<>("Creado",HttpStatus.CREATED);
         }
 
 

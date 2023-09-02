@@ -15,6 +15,14 @@ public class Account {
     private LocalDate creationDate;
     private double balance;
 
+    /*-------Relacion N-1 con Client-------------------------------------------------*/
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="client_id")
+    private Client client;
+    /*-------Relacion 1-N con Transaction-------------------------------------------------*/
+    @OneToMany (mappedBy = "account", fetch = FetchType.EAGER)
+    private Set<Transaction> transactions = new HashSet<>();
+
 //constructores
         public Account(String number, LocalDate creationDate, double balance) {
             this.number = number;
@@ -47,28 +55,17 @@ public class Account {
     }
 
 // Client
-/*-------Relacion N-1 con Client-------------------------------------------------*/
-@ManyToOne(fetch = FetchType.EAGER)
-@JoinColumn(name="client_id")
-private Client client;
-
     //@JsonIgnore
     public Client getClient() {
         return client;
     }
-
     public void setClient(Client client) {
         this.client = client;
     }
-
-/*-------Relacion 1-N con Transaction-------------------------------------------------*/
-@OneToMany (mappedBy = "account", fetch = FetchType.EAGER)
-private Set<Transaction> transactions = new HashSet<>();
-
+//Transaction
     public Set<Transaction> getTransactions() {
         return transactions;
     }
-
     public void addTransaction( Transaction transaction) {
         transaction.setAccount(this);
         transactions.add( transaction );
