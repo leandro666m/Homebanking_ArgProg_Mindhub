@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,16 +23,18 @@ public class TransactionController {
     @Autowired
      private TransactionRepository transactionRepository;
 
-    @GetMapping("/transaction")
+    //GETs
+    @GetMapping("/transactions")
     public Set<TransactionDTO> getTransactions(){
+        System.out.println("@GetMapping(\"/transactions\") public Set<TransactionDTO> getTransactions(){ : ");
         return transactionRepository.findAll().stream().map(transaction -> new TransactionDTO(transaction)).collect(Collectors.toSet());
     }
     @GetMapping("/transaction/{id}")
     public TransactionDTO getTransaction(@PathVariable Long id){
-        return new TransactionDTO( transactionRepository.findById(id).orElse(null) );
+        return new TransactionDTO(Objects.requireNonNull(transactionRepository.findById(id).orElse(null)));
     }
 
-
+    // POST -- CREATE
     @Transactional
     @PostMapping("/transactions")
     public ResponseEntity<Object> createTransaction(Authentication authentication,  @RequestParam Double amount, @RequestParam String description,
