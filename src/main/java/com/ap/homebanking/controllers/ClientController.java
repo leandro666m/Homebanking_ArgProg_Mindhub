@@ -29,6 +29,7 @@ public class ClientController {
 
     @RequestMapping( "/clients")
     public List<ClientDTO> getClients(){
+        System.out.println("@RequestMapping( \"/clients\") public List<ClientDTO> getClients(){ : ");
         return clientRepository.findAll().stream().map(ClientDTO::new).collect(Collectors.toList());
     }
 
