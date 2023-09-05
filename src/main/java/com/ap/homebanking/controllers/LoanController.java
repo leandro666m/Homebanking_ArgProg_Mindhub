@@ -3,6 +3,7 @@ package com.ap.homebanking.controllers;
 import com.ap.homebanking.dto.*;
 import com.ap.homebanking.models.*;
 import com.ap.homebanking.repositories.*;
+import com.ap.homebanking.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,36 +21,34 @@ import java.util.stream.Collectors;
 public class LoanController {
 
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientService;
     @Autowired
-    private LoanRepository loanRepository;
+    private LoanService loanService;
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
     @Autowired
-    private ClientLoanRepository   clientLoanRepository;
+    private ClientLoanService clientLoanService;
     @Autowired
-    private TransactionRepository transactionRepository;
+    private TransactionService transactionService;
 
     //GETs
     @RequestMapping("/loans")
     public Set<LoanDTO> getLoans(){
-        System.out.println("@GetMapping(\"/loans\") public Set<LoanDTO> getLoans(): ");
-        return loanRepository.findAll().stream().map(loan -> new LoanDTO(loan) ).collect(Collectors.toSet());
+        return loanService.getLoans();
     }
     @RequestMapping("/loan/{id}")
     public LoanDTO getLoan(@PathVariable Long id){
-        System.out.println("@GetMapping(\"/loan/{id}\") public LoanDTO getLoan(@PathVariable Long id): ");
-        return new LoanDTO( Objects.requireNonNull( loanRepository.findById(id).orElse(null)) );
+        return loanService.getLoan( id );
     }
 
     // POST -- CREATE
     @Transactional
     @RequestMapping(path = "/loans", method = RequestMethod.POST)
     public ResponseEntity<Object> createLoan(Authentication authentication, @RequestBody LoanAplicationDTO loanAplicationDTO){
-        System.out.println("@RequestMapping(path = \"/loans\", method = RequestMethod.POST) public ResponseEntity<Object> createLoan: ");
-        Client clientLogged = clientRepository.findByEmail(authentication.getName());
-        Account accountDestination = accountRepository.getAccountByNumber(loanAplicationDTO.getToAccountNumber() );
-        Loan loan = loanRepository.findById( loanAplicationDTO.getLoanId()).orElse(null);
+
+        Client clientLogged = clientService.findByEmail(authentication.getName());
+        Account accountDestination = accountService.getAccountByNumber( loanAplicationDTO.getToAccountNumber() );
+        Loan loan = loanService.findById( loanAplicationDTO.getLoanId() );
 
         //Verificar que los datos sean correctos, es decir no estén vacíos, que el monto no sea 0 o que las cuotas no sean 0.
         if(loanAplicationDTO.getAmount()<=0 || loanAplicationDTO.getPayments()<=0 ){
@@ -68,7 +67,7 @@ public class LoanController {
             return new ResponseEntity<>("Cantidad de cuotas no disponibles.", HttpStatus.FORBIDDEN);
         }
         //Verificar que la cuenta de destino exista
-        if( !accountRepository.existsByNumber(loanAplicationDTO.getToAccountNumber()) ){
+        if( !accountService.existsByNumber(loanAplicationDTO.getToAccountNumber()) ){
             return new ResponseEntity<>("No existe la cuenta destino.", HttpStatus.FORBIDDEN);
         }
         //Verificar que la cuenta de destino pertenezca al cliente autenticado
@@ -82,7 +81,7 @@ public class LoanController {
         clientLogged.addClientLoans( newclientLoan ); //ser agrega el nuevo prestamo al cliente loggeado
         loan.addClientLoans( newclientLoan ); //se agrega el nuevo prestamo a la tabla de prestamos
 
-        clientLoanRepository.save(newclientLoan);  //se agrega el obj de la relacion Cliente-Prestamo a la tabla relacion
+        clientLoanService.save(newclientLoan);  //se agrega el obj de la relacion Cliente-Prestamo a la tabla relacion
 
 //Se debe crear una transacción “CREDIT” asociada a la cuenta de destino (el monto debe quedar positivo)
 // con la descripción concatenando el nombre del préstamo y la frase “loan approved”
@@ -91,7 +90,7 @@ public class LoanController {
         Transaction creditTransaction = new Transaction( TransactionType.CREDIT, LocalDateTime.now() ,
                                                 loanAplicationDTO.getAmount(), description );
         accountDestination.addTransaction( creditTransaction );
-        transactionRepository.save( creditTransaction );
+        transactionService.save( creditTransaction );
 
 
         return new ResponseEntity<>("Préstamo creado.", HttpStatus.CREATED);

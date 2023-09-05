@@ -2,9 +2,9 @@ package com.ap.homebanking.controllers;
 import com.ap.homebanking.dto.CardDTO;
 import com.ap.homebanking.dto.ClientDTO;
 import com.ap.homebanking.models.*;
-import com.ap.homebanking.repositories.AccountRepository;
-import com.ap.homebanking.repositories.CardRepository;
 import com.ap.homebanking.repositories.ClientRepository;
+import com.ap.homebanking.services.AccountService;
+import com.ap.homebanking.services.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,16 +27,16 @@ import static com.ap.homebanking.utils.CardUtil.*;
 public class CardController {
 
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientRepository clientService;
     @Autowired
-    private CardRepository cardRepository;
+    private CardService cardService;
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
 
     @RequestMapping(path = "/clients/current/cards", method = RequestMethod.POST)
     public ResponseEntity<Object> createCard(Authentication authentication, @RequestParam CardType cardType,@RequestParam CardColor cardColor) {
 
-        Client clientLogged = clientRepository.findByEmail(authentication.getName());
+        Client clientLogged = clientService.findByEmail(authentication.getName());
         ClientDTO clientDto = new ClientDTO( clientLogged );
 
         Set<CardDTO> cards= clientDto.getCards();
@@ -71,7 +71,7 @@ public class CardController {
         String numCard ="";
                 do{
                     numCard = CardNumberGenerator();
-                }while( accountRepository.existsByNumber( numCard ) );
+                }while( accountService.existsByNumber( numCard ) );
         // No tiene tarjeta del color pedido, se la puede Crear:
             Card newCard = new Card( );
             newCard.setCardHolder( clientLogged.getFirstName()+" "+clientLogged.getLastName());
@@ -83,7 +83,7 @@ public class CardController {
             newCard.setThruDate(LocalDate.now().plusYears(5) );
             // al cliente loggeado
             clientLogged.addCard( newCard );
-            cardRepository.save( newCard );
+            cardService.save( newCard );
 
             return new ResponseEntity<>("Creado",HttpStatus.CREATED);
         }
