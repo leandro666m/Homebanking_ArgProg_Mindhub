@@ -27,17 +27,17 @@ public class AccountController {
     @Autowired
     private ClientRepository clientService;
 
-    @RequestMapping( "/accounts")
+    @GetMapping( "/accounts")
     public List<AccountDTO> getAccounts(){
         return accountService.getAccounts();
     }
 
-    @RequestMapping("/accounts/{id}")
+    @GetMapping("/accounts/{id}")
     public AccountDTO getAccount(@PathVariable Long id){
         return accountService.getAccount(id);
     }
 
-    @RequestMapping( path ="/clients/current/accounts", method = RequestMethod.POST)
+    @PostMapping( path ="/clients/current/accounts")
     public ResponseEntity<Object> createAccount(Authentication authentication){
        Client clientLogged = clientService.findByEmail( authentication.getName() );
             ClientDTO clientDto = new ClientDTO( clientLogged );

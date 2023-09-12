@@ -34,3 +34,5 @@ bootRun {
 	sourceResources sourceSets.main
 
 }
+
+implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'

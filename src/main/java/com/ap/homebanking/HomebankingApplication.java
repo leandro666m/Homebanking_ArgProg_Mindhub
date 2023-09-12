@@ -27,6 +27,7 @@ public class HomebankingApplication {
 									  TransactionRepository transactionRepository, LoanRepository loanRepository,
 									  ClientLoanRepository clientLoanRepository, CardRepository cardRepository ) {
 		return (args) -> {
+			/*
 //----------CLIENTES
 			Client client1 =new Client( "Melba", "Morel","melba@mindhub.com", passwordEncoder.encode("pass1234") );
             Client client2 = new Client( "Jack","Sparrow","jacksparr@mindhub.com", passwordEncoder.encode("pass1234") );
@@ -75,12 +76,12 @@ public class HomebankingApplication {
 			loanRepository.save( loan2 );
 			Loan loan3 = new Loan("Automotriz", 300000, List.of(6,12,24,36));
 			loanRepository.save( loan3 );
-
+*/
             //Créditos para Melba y segundo client
         // para el cliente 1 -Melba
             /*  Préstamo Hipotecario, 400.000, 60 cuotas.
                 Préstamo Personal, 50.000, 12 cuotas */
-            ClientLoan clientLoan1 = new ClientLoan(400000.0, 60);
+/*            ClientLoan clientLoan1 = new ClientLoan(400000.0, 60);
         client1.addClientLoans( clientLoan1 ); // asigno el Prestamo1 al cliente1
             loan1.addClientLoans( clientLoan1 ); //viceversa: al prestamo1 le asigno el cliente1
             clientLoanRepository.save( clientLoan1 ); // se guarda
@@ -89,10 +90,11 @@ public class HomebankingApplication {
         client1.addClientLoans( clientLoan2 );
             loan2.addClientLoans( clientLoan2 );
             clientLoanRepository.save( clientLoan2 );
+*/
         // para el cliente 2
             /*  Préstamo Personal, 100.000, 24 cuotas
                 Préstamo Automotriz, 200.000, 36 cuotas */
-            ClientLoan clientLoan3 = new ClientLoan(100000.0, 24);
+/*            ClientLoan clientLoan3 = new ClientLoan(100000.0, 24);
         client2.addClientLoans( clientLoan3 );
             loan2.addClientLoans( clientLoan3 );
             clientLoanRepository.save( clientLoan3 );
@@ -102,6 +104,7 @@ public class HomebankingApplication {
             loan3.addClientLoans( clientLoan4 );
             clientLoanRepository.save( clientLoan4 );
 
+ */
 //---CARDS
 		/*
 		Una tarjeta de débito GOLD para el cliente Melba, la fecha de inicio de validez es la fecha actual y la fecha de vencimiento 5 años desde la fecha actual, cardholder tendrá el nombre y apellido del cliente concatenado, los demás campos los puedes completar a tu elección, recuerda que el cvv tiene solo 3 dígitos.
@@ -109,7 +112,7 @@ public class HomebankingApplication {
 		Crea una tarjeta de crédito silver para el segundo cliente.
 		*/
 			//-- card1
-			Card card1 = new Card( );
+/*			Card card1 = new Card( );
 			card1.setCardHolder(client1.getFirstName()+" "+client1.getLastName());
 			card1.setType(CardType.DEBIT);
 			card1.setColor(CardColor.GOLD);
@@ -140,9 +143,9 @@ public class HomebankingApplication {
 				// a client2
 				client2.addCard(card3);
 				cardRepository.save(card3);
+*/
 		};
 	}
-
 
 
 }
