@@ -23,6 +23,7 @@ dependencies {
 	implementation 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
 }
 
 tasks.named('test') {
@@ -35,4 +36,3 @@ bootRun {
 
 }
 
-implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'

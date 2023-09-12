@@ -4,4 +4,5 @@ import com.ap.homebanking.models.Card;
 
 public interface CardService {
     public void save(Card newCard);
+    public void delete(Long id);
 }
