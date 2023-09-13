@@ -18,7 +18,7 @@ Vue.createApp({
                     this.debitCards = this.clientInfo.cards.filter(card => card.type == "DEBIT");
                 })
                 .catch((error) => {
-                    this.errorMsg = "Error getting data";
+                    this.errorMsg = "Error getting data en cards.js /api/clients/current";
                     this.errorToats.show();
                 })
         },

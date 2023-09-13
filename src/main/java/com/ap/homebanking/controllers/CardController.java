@@ -75,6 +75,7 @@ public class CardController {
             newCard.setCvv((short) (new Random().nextInt(999-1)+1 ) );
             newCard.setFromDate(LocalDate.now() );
             newCard.setThruDate(LocalDate.now().plusYears(5) );
+            newCard.setIsActive(true);
             // al cliente loggeado
             clientLogged.addCard( newCard );
             cardService.save( newCard );
