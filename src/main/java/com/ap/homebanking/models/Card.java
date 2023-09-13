@@ -27,7 +27,7 @@ public class Card {
     //constructores
         public Card() {
     }
-        public Card( String cardHolder, CardType type, CardColor color, String number, Short cvv, LocalDate fromDate, LocalDate thruDate, boolean isActive) {
+        public Card( String cardHolder, CardType type, CardColor color, String number, Short cvv, LocalDate fromDate, LocalDate thruDate) {
         this.cardHolder = cardHolder;
         this.type = type;
         this.color = color;
@@ -35,7 +35,7 @@ public class Card {
         this.cvv = cvv;
         this.fromDate = fromDate;
         this.thruDate = thruDate;
-            this.isActive = isActive;
+            this.isActive = true;
     }
 
     //metodos propios
