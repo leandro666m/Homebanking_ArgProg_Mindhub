@@ -23,7 +23,7 @@ Vue.createApp({
                     this.clientAccounts = response[1].data;
                 })
                 .catch((error) => {
-                    this.errorMsg = "Error getting data";
+                    this.errorMsg = "Error getting data loan-application.js";
                     this.errorToats.show();
                 })
         },
