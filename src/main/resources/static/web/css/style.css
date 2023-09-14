@@ -47,6 +47,12 @@
     transform: translateX(-50%); 
 }
 
+.delete-account-button {
+    position: relative;
+    bottom: -10px;
+    left: 50%; 
+    transform: translateX(-50%); 
+}
 .credit-transaction {
     color: green;
 }

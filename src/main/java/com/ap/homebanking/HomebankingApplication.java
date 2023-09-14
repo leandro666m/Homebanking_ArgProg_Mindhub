@@ -27,7 +27,7 @@ public class HomebankingApplication {
 									  TransactionRepository transactionRepository, LoanRepository loanRepository,
 									  ClientLoanRepository clientLoanRepository, CardRepository cardRepository ) {
 		return (args) -> {
-/*
+
 //----------CLIENTES
 			Client client1 =new Client( "Melba", "Morel","melba@mindhub.com", passwordEncoder.encode("pass1234") );
             Client client2 = new Client( "Jack","Sparrow","jacksparr@mindhub.com", passwordEncoder.encode("pass1234") );
@@ -36,9 +36,21 @@ public class HomebankingApplication {
 				clientRepository.save( client2 );
 				clientRepository.save( clientAdmin );
 //----------CUENTAS
-            Account account1 = new Account("VIN001", LocalDate.now(), 5000 );
-			Account account2 = new Account("VIN002", LocalDate.now().plusDays(1), 7500 );
-			Account account3 = new Account("VIN003", LocalDate.now(), 15000 );
+            Account account1 = new Account();
+					account1.setNumber("VIN001");
+					account1.setCreationDate( LocalDate.now() );
+					account1.setBalance(5000);
+					account1.setIsActive(true);
+			Account account2 = new Account();
+					account2.setNumber("VIN002");
+					account2.setCreationDate( LocalDate.now().plusDays(1) ) ;
+					account2.setBalance(7000);
+					account2.setIsActive(true);
+			Account account3 = new Account();
+					account3.setNumber("VIN003");
+					account3.setCreationDate( LocalDate.now() ) ;
+					account3.setBalance(15000);
+					account3.setIsActive(true);
 				client1.addAccount( account1);
 				client1.addAccount( account2 );
 				client2.addAccount( account3 );
@@ -123,7 +135,7 @@ public class HomebankingApplication {
 				// a client2
 				client2.addCard(card3);
 				cardRepository.save(card3);
-*/
+
 		};
 	}
 }

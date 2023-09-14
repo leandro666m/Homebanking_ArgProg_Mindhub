@@ -14,6 +14,7 @@ public class Account {
     private String number;
     private LocalDate creationDate;
     private double balance;
+    private boolean isActive;
 
     /*-------Relacion N-1 con Client-------------------------------------------------*/
     @ManyToOne(fetch = FetchType.EAGER)
@@ -28,6 +29,7 @@ public class Account {
             this.number = number;
             this.creationDate = creationDate;
             this.balance = balance;
+            this.isActive = true;
         }
         public Account() {        }
 
@@ -52,6 +54,12 @@ public class Account {
     }
     public void setBalance(double balance) {
         this.balance = balance;
+    }
+    public boolean getIsActive() {
+        return isActive;
+    }
+    public void setIsActive(boolean active) {
+        isActive = active;
     }
 
 // Client

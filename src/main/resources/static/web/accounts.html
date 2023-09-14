@@ -82,12 +82,12 @@
                     <div class="row mt-3">
                         <div class="col">
                             <h2 class="display-6 subtitle">Accounts</h2>
-                            <button v-if="clientInfo.accounts != null && clientInfo.accounts.length < 3"
+                            <button v-if="clientInfo != null && clientInfo.length < 3"
                                 v-on:click="create" id="create" class="btn btn-sm btn-success">Create</button>
                         </div>
                     </div>
                     <div class="row mx-2">
-                        <div v-for="account in clientInfo.accounts" class="col-12 col-md-4 mt-2 ">
+                        <div v-for="account in clientInfo" class="col-12 col-md-4 mt-2 ">
                             <a class="account-link" v-bind:href="'/web/account.html?id='+account.id">
                                 <div class="card border-0 account">
                                     <div class="card-body">
@@ -97,6 +97,7 @@
                                     </div>
                                 </div>
                             </a>
+                            <button id="delete" class="btn btn-sm btn-danger delete-account-button" v-on:click="deleteAccount(account.number)">Delete Account</button>
                         </div>
                     </div>
                     <div class="row mt-3">

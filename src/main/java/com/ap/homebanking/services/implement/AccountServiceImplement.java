@@ -1,6 +1,8 @@
 package com.ap.homebanking.services.implement;
 import com.ap.homebanking.dto.AccountDTO;
 import com.ap.homebanking.models.Account;
+import com.ap.homebanking.models.Card;
+import com.ap.homebanking.models.Client;
 import com.ap.homebanking.repositories.AccountRepository;
 import com.ap.homebanking.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,14 @@ public class AccountServiceImplement implements AccountService {
     @Override
     public Account getAccountByNumber( String accountNumber){
         return accountRepository.getAccountByNumber( accountNumber );
+    }
+
+    @Override
+    public void delete(Client client, String number) {
+        Account account = accountRepository.findByNumberAndClient(number, client);
+        account.setIsActive(false);
+        accountRepository.save(account);
+
     }
 
 }
