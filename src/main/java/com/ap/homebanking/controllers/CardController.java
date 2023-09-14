@@ -31,7 +31,7 @@ public class CardController {
     @Autowired
     private AccountService accountService;
 
-    @PostMapping(path = "/clients/current/cards")
+    @PostMapping("/clients/current/cards")
     public ResponseEntity<Object> createCard(Authentication authentication, @RequestParam CardType cardType,@RequestParam CardColor cardColor) {
         Client clientLogged = clientService.findByEmail(authentication.getName());
         ClientDTO clientDto = new ClientDTO( clientLogged );
@@ -82,7 +82,7 @@ public class CardController {
        return new ResponseEntity<>("Creado",HttpStatus.CREATED);
     }
 
-    @PatchMapping(path = "/clients/current/cards")
+    @PatchMapping("/clients/current/cards")
     public ResponseEntity<Object> deleteCard(Authentication authentication, @RequestParam String number) {
         try {
             Client clientLogged = clientService.findByEmail(authentication.getName());

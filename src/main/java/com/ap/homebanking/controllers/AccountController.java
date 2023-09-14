@@ -37,7 +37,7 @@ public class AccountController {
         return accountService.getAccount(id);
     }
 
-    @PostMapping( path ="/clients/current/accounts")
+    @PostMapping( "/clients/current/accounts")
     public ResponseEntity<Object> createAccount(Authentication authentication){
        Client clientLogged = clientService.findByEmail( authentication.getName() );
             ClientDTO clientDto = new ClientDTO( clientLogged );

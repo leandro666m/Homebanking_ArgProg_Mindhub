@@ -123,7 +123,6 @@ public class HomebankingApplication {
 				// a client2
 				client2.addCard(card3);
 				cardRepository.save(card3);
-
 */
 		};
 	}
