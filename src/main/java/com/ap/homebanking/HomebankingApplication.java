@@ -1,5 +1,5 @@
 package com.ap.homebanking;
-import com.ap.homebanking.models.*;
+
 import com.ap.homebanking.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -8,16 +8,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @SpringBootApplication
 public class HomebankingApplication {
-
+/*
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-
+*/
 	public static void main(String[] args) {
 		SpringApplication.run(HomebankingApplication.class, args);
 	}
@@ -27,7 +24,7 @@ public class HomebankingApplication {
 									  TransactionRepository transactionRepository, LoanRepository loanRepository,
 									  ClientLoanRepository clientLoanRepository, CardRepository cardRepository ) {
 		return (args) -> {
-
+/*
 //----------CLIENTES
 			Client client1 =new Client( "Melba", "Morel","melba@mindhub.com", passwordEncoder.encode("pass1234") );
             Client client2 = new Client( "Jack","Sparrow","jacksparr@mindhub.com", passwordEncoder.encode("pass1234") );
@@ -135,7 +132,7 @@ public class HomebankingApplication {
 				// a client2
 				client2.addCard(card3);
 				cardRepository.save(card3);
-
+*/
 		};
 	}
 }
