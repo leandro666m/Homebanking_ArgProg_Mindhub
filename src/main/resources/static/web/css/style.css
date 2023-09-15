@@ -37,6 +37,22 @@
     margin-bottom: 15px;
 }
 
+#delete {
+    
+}
+.delete-card-button {
+    position: absolute;
+    bottom: 10px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+}
+
+.delete-account-button {
+    position: relative;
+    bottom: -10px;
+    left: 50%; 
+    transform: translateX(-50%); 
+}
 .credit-transaction {
     color: green;
 }

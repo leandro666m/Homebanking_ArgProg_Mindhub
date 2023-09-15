@@ -1,6 +1,7 @@
 package com.ap.homebanking.controllers;
 
 import com.ap.homebanking.dto.AccountDTO;
+import com.ap.homebanking.dto.CardDTO;
 import com.ap.homebanking.dto.ClientDTO;
 import com.ap.homebanking.models.Account;
 import com.ap.homebanking.models.Client;
@@ -27,17 +28,17 @@ public class AccountController {
     @Autowired
     private ClientRepository clientService;
 
-    @RequestMapping( "/accounts")
+    @GetMapping( "/accounts")
     public List<AccountDTO> getAccounts(){
         return accountService.getAccounts();
     }
 
-    @RequestMapping("/accounts/{id}")
+    @GetMapping("/accounts/{id}")
     public AccountDTO getAccount(@PathVariable Long id){
         return accountService.getAccount(id);
     }
 
-    @RequestMapping( path ="/clients/current/accounts", method = RequestMethod.POST)
+    @PostMapping( "/clients/current/accounts")
     public ResponseEntity<Object> createAccount(Authentication authentication){
        Client clientLogged = clientService.findByEmail( authentication.getName() );
             ClientDTO clientDto = new ClientDTO( clientLogged );
@@ -64,4 +65,36 @@ public class AccountController {
         Client clientLogged = clientService.findByEmail(authentication.getName());
         return clientLogged.getAccounts().stream().map(account -> new AccountDTO(account)).collect(toSet());
     }
+
+    //PATCH
+    @PatchMapping("/clients/current/accounts")
+    public ResponseEntity<Object> deleteAccount(Authentication authentication, @RequestParam String number) {
+        try {
+            Client clientLogged = clientService.findByEmail(authentication.getName());
+            ClientDTO clientDto = new ClientDTO(clientLogged);
+            Set<AccountDTO> accounts = clientDto.getAccounts();
+
+            boolean accountFound = false;
+
+            for (AccountDTO account : accounts) {
+                if (number.equals(account.getNumber())) {
+                    accountService.delete(clientLogged, number);
+                    accountFound = true;
+                    break; // corta al bucle una vez que se ha encontrado y procesado la tarjeta.
+                }
+            }
+
+            if (accountFound) {
+                return ResponseEntity.ok("La cuenta se desactivó exitosamente.");
+            } else {
+                return new ResponseEntity<>("No se pudo eliminar la cuenta.",HttpStatus.FORBIDDEN);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error al procesar la solicitud.");
+        }
+    }
+
+
+
+
 }

@@ -18,7 +18,7 @@ Vue.createApp({
                 })
                 .catch((error) => {
                     // handle error
-                    this.errorMsg = "Error getting data";
+                    this.errorMsg = "Error getting data - accounts.js /api/accounts/${id}";
                     this.errorToats.show();
                 })
         },

@@ -6,13 +6,11 @@ import com.ap.homebanking.repositories.ClientRepository;
 import com.ap.homebanking.services.AccountService;
 import com.ap.homebanking.services.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.Random;
@@ -33,17 +31,13 @@ public class CardController {
     @Autowired
     private AccountService accountService;
 
-    @RequestMapping(path = "/clients/current/cards", method = RequestMethod.POST)
+    @PostMapping("/clients/current/cards")
     public ResponseEntity<Object> createCard(Authentication authentication, @RequestParam CardType cardType,@RequestParam CardColor cardColor) {
-
         Client clientLogged = clientService.findByEmail(authentication.getName());
         ClientDTO clientDto = new ClientDTO( clientLogged );
-
         Set<CardDTO> cards= clientDto.getCards();
-
         int foundDebit=0;
         int foundCredit=0;
-
                     for (CardDTO card : cards) {
                         if ( cardType == card.getType() ) {
                             if ( cardType.equals(DEBIT) ) {
@@ -81,13 +75,39 @@ public class CardController {
             newCard.setCvv((short) (new Random().nextInt(999-1)+1 ) );
             newCard.setFromDate(LocalDate.now() );
             newCard.setThruDate(LocalDate.now().plusYears(5) );
+            newCard.setIsActive(true);
             // al cliente loggeado
             clientLogged.addCard( newCard );
             cardService.save( newCard );
+       return new ResponseEntity<>("Creado",HttpStatus.CREATED);
+    }
 
-            return new ResponseEntity<>("Creado",HttpStatus.CREATED);
+    @PatchMapping("/clients/current/cards")
+    public ResponseEntity<Object> deleteCard(Authentication authentication, @RequestParam String number) {
+        try {
+            Client clientLogged = clientService.findByEmail(authentication.getName());
+            ClientDTO clientDto = new ClientDTO(clientLogged);
+            Set<CardDTO> cards = clientDto.getCards();
+
+            boolean cardFound = false;
+
+            for (CardDTO card : cards) {
+                if (number.equals(card.getNumber())) {
+                    cardService.delete(clientLogged, number);
+                    cardFound = true;
+                    break; // corta al bucle una vez que se ha encontrado y procesado la tarjeta.
+                }
+            }
+
+            if (cardFound) {
+                return ResponseEntity.ok("La tarjeta se desactivó exitosamente.");
+            } else {
+                return new ResponseEntity<>("No se pudo eliminar la tarjeta.",HttpStatus.FORBIDDEN);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error al procesar la solicitud.");
         }
-
+    }
 
 
 }

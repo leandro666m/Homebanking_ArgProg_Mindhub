@@ -21,7 +21,7 @@ Vue.createApp({
                     this.clientAccounts = response.data;
                 })
                 .catch((error) => {
-                    this.errorMsg = "Error getting data";
+                    this.errorMsg = "Error getting data transfers.js";
                     this.errorToats.show();
                 })
         },

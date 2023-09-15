@@ -1,7 +1,9 @@
 package com.ap.homebanking.services;
 
 import com.ap.homebanking.models.Card;
+import com.ap.homebanking.models.Client;
 
 public interface CardService {
-    public void save(Card newCard);
+     void save(Card newCard);
+     void delete(Client client, String number);
 }

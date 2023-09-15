@@ -17,6 +17,7 @@ public class Card {
     private short cvv; // de -32,768 a 32,767
     private LocalDate fromDate;
     private LocalDate thruDate;
+    private boolean isActive;
 
     //---Relacion N-1 con Client-------------------------------------------------*/
     @ManyToOne(fetch = FetchType.EAGER)
@@ -34,6 +35,7 @@ public class Card {
         this.cvv = cvv;
         this.fromDate = fromDate;
         this.thruDate = thruDate;
+            this.isActive = true;
     }
 
     //metodos propios
@@ -82,8 +84,14 @@ public class Card {
     public void setThruDate(LocalDate thruDate) {
         this.thruDate = thruDate;
     }
+    public boolean getIsActive() {
+        return isActive;
+    }
+    public void setIsActive(boolean active) {
+        isActive = active;
+    }
 
-// Client
+    // Client
     public Client getClient() {
         return client;
     }

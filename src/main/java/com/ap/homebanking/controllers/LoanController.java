@@ -32,18 +32,18 @@ public class LoanController {
     private TransactionService transactionService;
 
     //GETs
-    @RequestMapping("/loans")
+    @GetMapping("/loans")
     public Set<LoanDTO> getLoans(){
         return loanService.getLoans();
     }
-    @RequestMapping("/loan/{id}")
+    @GetMapping("/loan/{id}")
     public LoanDTO getLoan(@PathVariable Long id){
         return loanService.getLoan( id );
     }
 
     // POST -- CREATE
     @Transactional
-    @RequestMapping(path = "/loans", method = RequestMethod.POST)
+    @PostMapping(path = "/loans")
     public ResponseEntity<Object> createLoan(Authentication authentication, @RequestBody LoanAplicationDTO loanAplicationDTO){
 
         Client clientLogged = clientService.findByEmail(authentication.getName());
